@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  report_date: 2012-05-05 15:43:23
+  report: MyText
+  user_id: 1
+  trash: false
+  comment: MyText
+  manager_id: 1
+two:
+  id: 2
+  report_date: 2012-05-05 15:43:23
+  report: MyText
+  user_id: 1
+  trash: false
+  comment: MyText
+  manager_id: 1

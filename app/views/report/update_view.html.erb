@@ -1,0 +1,45 @@
+<% dnames  = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'] %>
+<table id="my_table" class ="list issues" >
+  <thead>
+    <tr>
+      <% percent=(100/@id_and_reps.keys.length+1).to_s + "%" %>
+      <th></th>
+      <% @id_and_reps.keys.each do |key| %>
+        <th style="width:<%=  percent%>"><%= User.find(key).name %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% (0...@id_and_reps[User.current.id].length).each do |i| %>
+      <% isweekendday = @id_and_reps[User.current.id][i].report_date.wday == 0 || @id_and_reps[User.current.id][i].report_date.wday == 6%>
+      <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
+        <td>
+          <%= @id_and_reps[User.current.id][i].report_date.strftime("%Y/%m/%d") %>
+          <%=  dnames[@id_and_reps[User.current.id][i].report_date.wday] %>
+        </td>
+        <% @id_and_reps.keys.each do |key| %>
+          <% if isweekendday == true %>
+            <% bcolor="lightgray" %>
+          <% elsif  @id_and_reps[key][i].report.nil? %>
+            <% bcolor="pink" %>
+          <% elsif @id_and_reps[key][i].trash == true %>
+            <% bcolor="yellow" %>
+          <% else %>
+            <% bcolor="green" %>
+          <% end %>
+          <td style="background-color: <%=bcolor%>">
+            <% if @id_and_reps[key][i].user_id != User.current.id || bcolor != "green" %>
+              <% link_to  ("show?report=" + @id_and_reps[key][i].id.to_s) do %>
+                <div style="height:100%;width:100%">
+                  <%=  @id_and_reps[key][i].report %>
+                </div>
+              <% end %>
+            <% else %>
+              <%=  @id_and_reps[key][i].report %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

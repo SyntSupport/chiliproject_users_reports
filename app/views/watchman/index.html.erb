@@ -1,0 +1,37 @@
+<h2>Права на просмотр отчетов</h2>
+
+<%#  list = select("post", "person_id", @users.collect {|p| [ p.name, p.id ] }, { :include_blank => true })  %>
+
+<% form_for :watchman, :url => {:action => "create"} do |f| %>
+  <%= label_tag ":watchman_id", "Смотрящий" %>
+  <%= f.select(:watchman_id , @users.collect {|p| [ p.name, p.id ] }, { :include_blank => true }) %>
+  <%= label_tag ":watched_id", "Наблюдаемый" %>
+  <%= f.select(:watched_id, @users.collect {|p| [ p.name, p.id ] }, { :include_blank => true }) %>
+  <%= f.submit "Добавить" %>
+<% end %>
+
+<table class ="list issues" >
+  <thead>
+    <tr>
+      <th style="width:50%">Смотрящий</th>
+      <th style="width:50%">Наблюдаемый</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @watch_pairs.each do |pair| %>
+      <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
+        <% form_for :pair, :url => {:action => "delete"} do |f| %>
+        <%= f.hidden_field :id, :value => pair.id   %>
+        <td><%=  pair.watchman.name %></td>
+        <td><%=  pair.watched.name %></td>
+        <td><%= f.submit "Удалить" %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% content_for :header_tags do %>
+  <%= javascript_include_tag 'select_setting.js', :plugin => 'chiliproject_users_reports' %>
+<% end %>

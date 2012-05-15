@@ -1,0 +1,19 @@
+<h2><%= User.find(@report.user_id).name %>:</h2>
+<table class ="list issues" >
+  <thead>
+  <tr>
+    <th style="width:10%">Дата отчета</th>
+    <th style="width:35%">Отчет</th>
+    <th style="width:35%">Комментарий Менеджера</th>
+    <th style="width:10%">Барахло</th>
+    <th style="width:10%"></th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
+        <%= render :partial => 'report', :object => @report %>
+    </tr>
+  </tbody>
+</table>
+
+

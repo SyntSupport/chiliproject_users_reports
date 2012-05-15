@@ -1,0 +1,23 @@
+<h2>Добавление отчетов</h2>
+<table class ="list issues" >
+  <thead>
+    <tr>
+      <th style="width:10%">Дата отчета</th>
+      <th style="width:35%">Отчет</th>
+      <th style="width:35%">Комментарий Менеджера</th>
+      <th style="width:10%">Барахло</th>
+      <th style="width:10%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reports.each do |report| %>
+      <% if report.report.nil? || report.trash == true %>
+        <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>" style="background-color: <%= (report.trash == true ? "lightyellow" : "white") %>">
+          <%= render :partial => 'report', :object => report %>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+
