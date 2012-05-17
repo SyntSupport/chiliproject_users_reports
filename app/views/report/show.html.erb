@@ -16,7 +16,7 @@
           <%= render :partial => 'report', :object => @report, :locals => {:f => rep_from} %>
         </tr>
       <% end %>
-      <%= reports_from.submit "Добавить" if (User.current.id == @report.user_id && @report.trash == true) || User.current.id != @report.user_id %>
+      <%= reports_from.submit "Добавить" if (User.current.id == @report.user_id && @report.trash == true) || User.current.id != @report.user_id || @report.id.nil? %>
     <% end %>
   </tbody>
 </table>

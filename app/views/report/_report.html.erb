@@ -1,9 +1,9 @@
 <% dnames  = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'] %>
 <% iseditable = report[:report].nil? || report.trash == true %>
 <% isweekendday = report.report_date.wday == 0 || report.report_date.wday == 6%>
-
 <%= f.hidden_field :id, :value => report.id %>
 <%= f.hidden_field :report_date, :value => report.report_date %>
+<%= f.hidden_field :user_id, :value => report.user.id %>
 <td>
   <%= report.report_date.strftime("%Y/%m/%d") %>
   <%=  dnames[report.report_date.wday] %>

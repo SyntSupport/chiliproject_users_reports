@@ -65,9 +65,9 @@ class ReportController < ApplicationController
             next
           end
           if trash == true
-              status = l(:redo_report)
+            status = l(:redo_report)
           elsif trash_db != trash
-              status = l(:accepted_report)
+            status = l(:accepted_report)
           else
             status = l(:comment_report)
           end
@@ -99,11 +99,11 @@ class ReportController < ApplicationController
     else
       flash[:error] = l(:nothing_to_update)
     end
-    if (/show\?report=/.match(request.env["HTTP_REFERER"]))
-      if flash.key?(:error)
-        redirect_to :back
+    if (/report\/show/.match(request.env["HTTP_REFERER"]))
+      if (@report.nil? || @report.id.nil?)
+        redirect_to :action => 'show', :report => { :id => "", :report_date => reports.first[1][:report_date], :user_id => reports.first[1][:user_id] }
       else
-        redirect_to :action => 'view'
+        redirect_to :action => 'show', :report => @report.id
       end
     else
       redirect_to :action => 'index'
@@ -158,14 +158,23 @@ class ReportController < ApplicationController
   end
 
   def show
-    @report = Report.find(params[:report]) rescue nil
-    if @report.nil?
+    if (params[:report].key?(:id) rescue false)
+      if params[:report][:id] == ""
+        @report = Report.new(params[:report])
+      else
+        @report = Report.find(params[:report][:id]) rescue nil
+      end
+    else
+      @report = Report.find(params[:report]) rescue nil
+    end
+    if @report.nil? || (@report.id.nil? && @report.user_id != User.current.id)
       render_404
       return false
-    end
-    unless Watchman.getwatchedids.include?(@report.user_id) || User.current.admin?
-      render_403
-      return false
+    else
+      unless Watchman.getwatchedids.include?(@report.user_id) || (!@report.id.nil? && User.current.admin?)
+        render_403
+        return false
+      end
     end
   end
 
