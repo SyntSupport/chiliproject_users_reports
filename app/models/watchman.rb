@@ -7,18 +7,18 @@ class Watchman < ActiveRecord::Base
 
   def self.getwatchedids
     ids = []
-    if User.current.admin?
-      watcheds = User.find(:all, :conditions => "status = 1", :order => :lastname )
-      watcheds.each do |w|
-        ids << w.id
-      end
-    else
+#    if User.current.admin?
+#      watcheds = User.find(:all, :conditions => "status = 1", :order => :lastname )
+#      watcheds.each do |w|
+#        ids << w.id
+#      end
+#    else
       watcheds = Watchman.find_by_sql("SELECT distinct watched_id FROM watchmen where watchman_id = " + User.current.id.to_s + " and watched_id <>  " + User.current.id.to_s + " order by watched_id")
       watcheds.each do |w|
         ids << w.watched_id
       end
       ids.insert(0,User.current.id)
-    end
+#    end
     return ids
   end
   def self.getwatchmanids

@@ -4,4 +4,12 @@ ru:
   menu_view_reports: "Просмотреть отчеты "
   field_watched: "Наблюдаемый"
   field_watchman: "Смотрящий"
+  nothing_to_update: "Не внесено изменений"
+  new_report: "Отчет (новый)"
+  redo_report: "Отчет (Переделать)"
+  accepted_report: "Отчет (Принято)"
+  comment_report: "Отчет (Комментарий)"
+  redid_report: "Отчет (Исправленный)"
+
+
 

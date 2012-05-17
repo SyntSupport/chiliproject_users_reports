@@ -1,21 +1,39 @@
 <h2>Добавление отчетов</h2>
+<table>
+  <tr>
+    <% form_for :filter, :html => { :id => 'filter_form' } do |f| %>
+      <td>
+        <%= label_tag "startdate", "Начальная дата:"   %>
+        <%= f.text_field "startdate", :size => 10, :value => @startdate, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
+      </td>
+      <td>
+        <%= f.submit "Выбрать" %>
+      </td>
+    <% end %>
+  </tr>
+</table>
 <table class ="list issues" >
   <thead>
     <tr>
       <th style="width:10%">Дата отчета</th>
       <th style="width:35%">Отчет</th>
       <th style="width:35%">Комментарий Менеджера</th>
-      <th style="width:10%">Барахло</th>
-      <th style="width:10%"></th>
+      <th>Менеджер</th>
+      <th style="width:10%">Переделать</th>
     </tr>
   </thead>
   <tbody>
-    <% @reports.each do |report| %>
-      <% if report.report.nil? || report.trash == true %>
-        <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>" style="background-color: <%= (report.trash == true ? "lightyellow" : "white") %>">
-          <%= render :partial => 'report', :object => report %>
-        </tr>
+    <% form_for :reports, :url => {:action => "add"} do |reports_from| %>
+      <% @reports.each do |report| %>
+        <% reports_from.fields_for :report, :index => report do |rep_from|%>
+          <% if report.report.nil? || report.trash == true %>
+            <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>" style="background-color: <%= (report.trash == true ? "lightyellow" : "white") %>">
+              <%= render :partial => 'report', :object => report, :locals => {:f => rep_from} %>
+            </tr>
+          <% end %>
+        <% end %>
       <% end %>
+      <%= reports_from.submit "Добавить" %>
     <% end %>
   </tbody>
 </table>

@@ -1,39 +1,35 @@
 <% dnames  = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'] %>
 <% iseditable = report[:report].nil? || report.trash == true %>
 <% isweekendday = report.report_date.wday == 0 || report.report_date.wday == 6%>
-<%  form_for report, :url => {:action => "addrep"} do |f| %>
-  <%= f.hidden_field :id, :value => report.id %>
-  <%= f.hidden_field :report_date, :value => report.report_date %>
-  <td>
-    <%= report.report_date.strftime("%Y/%m/%d") %>
-    <%=  dnames[report.report_date.wday] %>
-  </td>
-  <td>
-    <% if iseditable && report.user_id == User.current.id %>
-      <%= f.text_area :report, :rows => 5, :value => report.report, :style => ( isweekendday ?  "background-color: lightgray" : "background-color: white" ) + ";height:100%;width:100%"  %>
-    <% else %>
-      <%=  report.report %>
-    <%  end %>
-  </td>
-  <td>
-    <% if report.user_id != User.current.id %>
-      <%= f.text_area :comment, :rows => 5, :value => report.comment, :style => ( isweekendday ?  "background-color: lightgray" : "background-color: white" ) + ";height:100%;width:100%" %>
-    <% else %>
-      <%=  report.comment %>
-    <%  end %>
-  </td>
-  <td>
-    <% if report.user_id != User.current.id %>
-      <%= f.check_box :trash, :checked => (report.trash == true ? true : false)  %>
-    <% else %>
-      <%= (report.trash == false || report.trash.nil? ? :no : :yes)  %>
-    <%  end %>
-  </td>
-  <td>
-    <% if report.user_id != User.current.id %>
-      <%= f.submit "Update" %>
-    <% else %>
-      <%= (iseditable ? (f.submit "Add") : "" ) %>
-    <%  end %>
-  </td>
-<% end %>
+
+<%= f.hidden_field :id, :value => report.id %>
+<%= f.hidden_field :report_date, :value => report.report_date %>
+<td>
+  <%= report.report_date.strftime("%Y/%m/%d") %>
+  <%=  dnames[report.report_date.wday] %>
+</td>
+<td>
+  <% if iseditable && report.user_id == User.current.id %>
+    <%= f.text_area :report, :rows => 5, :value => report.report, :style => ( isweekendday ?  "background-color: #B0D2D7" : "" ) + ";height:100%;width:100%", :class => 'wiki-edit'  %>
+  <% else %>
+    <%=  report.report %>
+  <%  end %>
+</td>
+<td>
+  <% if report.user_id != User.current.id %>
+    <%= f.text_area :comment, :rows => 5, :value => report.comment, :style => ( isweekendday ?  "background-color: #B0D2D7" : "" ) + ";height:100%;width:100%", :class => 'wiki-edit' %>
+  <% else %>
+    <%=  report.comment %>
+  <%  end %>
+</td>
+<td>
+  <%= User.find(report.manager_id).name unless report.manager_id.nil?  %>
+</td>
+<td>
+  <% if report.user_id != User.current.id %>
+    <%= f.check_box :trash, :checked => (report.trash == true ? true : false)  %>
+  <% else %>
+    <%= (report.trash == false || report.trash.nil? ? "НЕТ" : "ДА" )  %>
+  <%  end %>
+</td>
+

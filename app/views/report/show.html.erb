@@ -1,18 +1,23 @@
 <h2><%= User.find(@report.user_id).name %>:</h2>
 <table class ="list issues" >
   <thead>
-  <tr>
-    <th style="width:10%">Дата отчета</th>
-    <th style="width:35%">Отчет</th>
-    <th style="width:35%">Комментарий Менеджера</th>
-    <th style="width:10%">Барахло</th>
-    <th style="width:10%"></th>
-  </tr>
+    <tr>
+      <th style="width:10%">Дата отчета</th>
+      <th style="width:35%">Отчет</th>
+      <th style="width:35%">Комментарий Менеджера</th>
+      <th>Менеджер</th>
+      <th style="width:10%">Переделать</th>
+    </tr>
   </thead>
   <tbody>
-    <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
-        <%= render :partial => 'report', :object => @report %>
-    </tr>
+    <% form_for :reports, :url => {:action => "add"} do |reports_from| %>
+      <% reports_from.fields_for :report, :index => @report do |rep_from|%>
+        <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
+          <%= render :partial => 'report', :object => @report, :locals => {:f => rep_from} %>
+        </tr>
+      <% end %>
+      <%= reports_from.submit "Добавить" if (User.current.id == @report.user_id && @report.trash == true) || User.current.id != @report.user_id %>
+    <% end %>
   </tbody>
 </table>
 

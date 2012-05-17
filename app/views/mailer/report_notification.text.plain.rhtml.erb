@@ -1,1 +1,6 @@
+Отчет:
+<%=  @report.report %>
+Комментарий менеджера<%= (@report.manager_id.nil? ? "" : "(" + User.find(@report.manager_id).name + ")" )%>:
+<%=  @report.comment.nil? ? "" : @report.comment %>
+Нехороий отчет: <%= @report.trash.nil? || @report.trash == false ? "НЕТ" : "ДА" %>
 <%= link_to h(@url), @url %>

@@ -1,21 +1,32 @@
 <% dnames  = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'] %>
 <h2>Просмотр отчетов</h2>
-
-<% form_for :filter, :html => { :id => 'filter_form' } do |f| %>
-  <%= label_tag "startdate", "Начальная дата:"   %>
-  <%= f.text_field "startdate", :size => 10, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
-  <%= label_tag "enddate", "Конечная дата:"   %>
-  <%= f.text_field "enddate", :size => 10, :class => "values_enddate", :id => "values_enddate" %> <%= calendar_for "values_enddate" %><br/>
-  <%= label_tag "watched_id", "Наблюдаемые:"   %><br/>
-  <%= f.select "watched_id", @WATCHEDIDS.collect {|p| [ User.find(p).name, p ] }, { :include_blank => false},{  :multiple => true } %><br/>
-  <%= f.submit "Выбрать" %>
-<% end %>
+<table>
+  <tr>
+    <% form_for :filter, :html => { :id => 'filter_form' } do |f| %>
+      <td>
+        <%= label_tag "startdate", "Начальная дата:"   %>
+        <%= f.text_field "startdate", :size => 10, :value => @startdate, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
+      </td>
+      <td>
+        <%= label_tag "enddate", "Конечная дата:"   %>
+        <%= f.text_field "enddate", :size => 10, :value => @enddate, :class => "values_enddate", :id => "values_enddate" %> <%= calendar_for "values_enddate" %><br/>
+      </td>
+      <td>
+        <%= label_tag "watched_id", "Наблюдаемые:"   %><br/>
+        <%= f.select "watched_id", options_for_select(@all.collect {|p| [ User.find(p).name, p ] }, @selected), { :include_blank => false},{  :multiple => true }  %><br/>
+      </td>
+      <td>
+        <%= f.submit "Выбрать" %>
+      </td>
+    <% end %>
+  </tr>
+</table>
 <%#= submit_to_remote 'Filter', 'Filter', :url => {:controller => 'report', :action => 'update_view',:with =>
 "Form.serialize('filter')"}, :update => "my_table" %>
 <%#= link_to_remote 'Filter', :url => { :action => 'update_view', :with =>
 "'startdate=' + $('startdate').value&'enddate=' + $('enddate').value&'watched_id=' + $('watched_id').value"}, :layout => false, :update => "my_table" %>
 
-<table id="my_table" class ="list issues" >
+<table id="my_table" class ="list issues" style="border-collapse: separate;" >
   <thead>
     <tr>
       <% percent=(100/@id_and_reps.keys.length+1).to_s + "%" %>
@@ -43,17 +54,15 @@
           <% else %>
             <% bcolor="#C1FFC1" %>
           <% end %>
-          <td style="background-color: <%=bcolor%>">
-            <% if @id_and_reps[key][i].user_id != User.current.id || bcolor == "lightpink" || bcolor == "lightyellow" %>
-              <% link_to  ("show?report=" + @id_and_reps[key][i].id.to_s) do %>
-                <div style="height:100%;width:100%">
-                  <%=  @id_and_reps[key][i].report %>
-                </div>
-              <% end %>
-            <% else %>
+          <% unless @id_and_reps[key][i].id.nil? %>
+            <td style="background-color: <%=bcolor%>;cursor: pointer;" onMouseOver="this.style.backgroundColor='#87CEFA'; this.style.cursor='hand';"
+                onMouseOut="this.style.backgroundColor='<%=bcolor%>'" onClick="window.location.href='/report/show?report=<%=@id_and_reps[key][i].id.to_s%>'">
               <%=  @id_and_reps[key][i].report %>
-            <% end %>
-          </td>
+            </td>
+          <% else %>
+            <td style="background-color: <%=bcolor%>;"></td>
+          <% end %>
+
         <% end %>
       </tr>
     <% end %>
