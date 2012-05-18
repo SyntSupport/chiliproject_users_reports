@@ -39,12 +39,12 @@
                 <%=  dnames[@id_and_reps.to_a[0][1][i].report_date.wday] %>
               </td>
               <% @id_and_reps.keys.each do |key| %>
-                <% if isweekendday == true %>
+                <% if @id_and_reps[key][i].trash == true %>
+                  <% bcolor="lightyellow" %>
+                <% elsif isweekendday == true %>
                   <% bcolor="#B0D2D7" %>
                 <% elsif  @id_and_reps[key][i].report.nil? %>
                   <% bcolor="lightpink" %>
-                <% elsif @id_and_reps[key][i].trash == true %>
-                  <% bcolor="lightyellow" %>
                 <% else %>
                   <% bcolor="#C1FFC1" %>
                 <% end %>
