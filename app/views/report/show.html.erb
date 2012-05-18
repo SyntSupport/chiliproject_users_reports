@@ -1,4 +1,5 @@
 <h2><%= User.find(@report.user_id).name %>:</h2>
+<% isweekendday = @report.report_date.wday == 0 || @report.report_date.wday == 6%>
 <table class ="list issues" >
   <thead>
     <tr>
@@ -12,11 +13,11 @@
   <tbody>
     <% form_for :reports, :url => {:action => "add"} do |reports_from| %>
       <% reports_from.fields_for :report, :index => @report do |rep_from|%>
-        <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
+        <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even')%>" style="<%= ( isweekendday ?  "background-color: #B0D2D7" : "" )%>"" %>
           <%= render :partial => 'report', :object => @report, :locals => {:f => rep_from} %>
         </tr>
       <% end %>
-      <%= reports_from.submit "Добавить" if (User.current.id == @report.user_id && @report.trash == true) || User.current.id != @report.user_id || @report.id.nil? %>
+      <%= reports_from.submit l(:add_button) if (User.current.id == @report.user_id && @report.trash == true) || User.current.id != @report.user_id || @report.id.nil? %>
     <% end %>
   </tbody>
 </table>

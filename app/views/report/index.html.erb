@@ -12,7 +12,7 @@
     <% end %>
   </tr>
 </table>
-<table class ="list issues" >
+<table class ="list issues" style="border-collapse: separate;">
   <thead>
     <tr>
       <th style="width:10%">Дата отчета</th>
@@ -25,15 +25,16 @@
   <tbody>
     <% form_for :reports, :url => {:action => "add"} do |reports_from| %>
       <% @reports.each do |report| %>
+      <% isweekendday = report.report_date.wday == 0 || report.report_date.wday == 6 %>
         <% reports_from.fields_for :report, :index => report do |rep_from|%>
           <% if report.report.nil? || report.trash == true %>
-            <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>" style="background-color: <%= (report.trash == true ? "lightyellow" : "white") %>">
+            <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>" style="background-color: <%= (report.trash == true ? "lightyellow" : ( isweekendday ?  "#B0D2D7" : "" )) %>">
               <%= render :partial => 'report', :object => report, :locals => {:f => rep_from} %>
             </tr>
           <% end %>
         <% end %>
       <% end %>
-      <%= reports_from.submit "Добавить" %>
+      <%= reports_from.submit l(:add_button) %>
     <% end %>
   </tbody>
 </table>

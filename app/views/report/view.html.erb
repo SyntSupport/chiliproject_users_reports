@@ -38,7 +38,7 @@
       <% isweekendday = @id_and_reps.to_a[0][1][i].report_date.wday == 0 || @id_and_reps.to_a[0][1][i].report_date.wday == 6%>
       <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
         <td>
-          <%= @id_and_reps.to_a[0][1][i].report_date.strftime("%Y/%m/%d") %>
+          <%= @id_and_reps.to_a[0][1][i].report_date.strftime("%d/%m/%Y") %>
           <%=  dnames[@id_and_reps.to_a[0][1][i].report_date.wday] %>
         </td>
         <% @id_and_reps.keys.each do |key| %>
