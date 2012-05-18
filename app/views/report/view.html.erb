@@ -1,75 +1,78 @@
 <% dnames  = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'] %>
 <h2>Просмотр отчетов</h2>
 <table>
-  <tbody>
-    <tr>
+  <tr>
+    <td align="center">
       <% form_for :filter, :html => { :id => 'filter_form' } do |f| %>
-        <td>
-          <%= label_tag "startdate", "Начальная дата:"   %>
-          <%= f.text_field "startdate", :size => 10, :value => @startdate, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
-        </td>
-        <td>
-          <%= label_tag "enddate", "Конечная дата:"   %>
-          <%= f.text_field "enddate", :size => 10, :value => @enddate, :class => "values_enddate", :id => "values_enddate" %> <%= calendar_for "values_enddate" %><br/>
-        </td>
-        <td>
-          <%= label_tag "watched_id", "Наблюдаемые:"   %><br/>
-          <%= f.select "watched_id", options_for_select(@all.collect {|p| [ User.find(p).name, p ] }, @selected), { :include_blank => false},{  :multiple => true }  %><br/>
-        </td>
-        <td>
-          <%= f.submit "Выбрать" %>
-        </td>
+        <%= f.submit l(:choose_button) %>
+        <br/>
+        <%= label_tag "startdate", "Начальная дата:"   %>
+        <br/>
+        <%= f.text_field "startdate", :size => 10, :value => @startdate, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
+        <br/>
+        <%= label_tag "enddate", "Конечная дата:"   %>
+        <br/>
+        <%= f.text_field "enddate", :size => 10, :value => @enddate, :class => "values_enddate", :id => "values_enddate" %> <%= calendar_for "values_enddate" %>
+        <br/>
+        <%= label_tag "watched_id", "Наблюдаемые:"   %>
+        <br/>
+        <%= f.select "watched_id", options_for_select(@all.collect {|p| [ User.find(p).name, p ] }, @selected), { :include_blank => false},{  :multiple => true, :size => @all.length  }  %>
       <% end %>
-    </tr>
-  </tbody>
-</table>
-<table id="my_table" class ="list issues" style="border-collapse: separate;" >
-  <thead>
-    <tr>
-      <% percent=(100/(@id_and_reps.keys.length)).to_s + "%" %>
-      <th></th>
-      <% @id_and_reps.keys.each do |key| %>
-        <th style="width:<%=  percent%>"><%= User.find(key).name %></th>
-      <% end %>
-    </tr>
-  </thead>
-  <tbody>
-    <% (0...@id_and_reps.to_a[0][1].length).each do |i| %>
-      <% isweekendday = @id_and_reps.to_a[0][1][i].report_date.wday == 0 || @id_and_reps.to_a[0][1][i].report_date.wday == 6%>
-      <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
-        <td>
-          <%= @id_and_reps.to_a[0][1][i].report_date.strftime("%d/%m/%Y") %>
-          <%=  dnames[@id_and_reps.to_a[0][1][i].report_date.wday] %>
-        </td>
-        <% @id_and_reps.keys.each do |key| %>
-          <% if isweekendday == true %>
-            <% bcolor="#B0D2D7" %>
-          <% elsif  @id_and_reps[key][i].report.nil? %>
-            <% bcolor="lightpink" %>
-          <% elsif @id_and_reps[key][i].trash == true %>
-            <% bcolor="lightyellow" %>
-          <% else %>
-            <% bcolor="#C1FFC1" %>
-          <% end %>
-          <% if @id_and_reps[key][i].report.nil? && key != User.current.id %>
-            <td style="background-color: <%=bcolor%>;cursor: default">
-            </td>
-          <% else %>
-            <% form_name = (key.to_s + "_" + i.to_s) %>
-            <td style="background-color: <%=bcolor%>;cursor: pointer;" onMouseOver="this.style.backgroundColor='#87CEFA'; this.style.cursor='hand';"
-                onMouseOut="this.style.backgroundColor='<%=bcolor%>'" onClick="document.getElementById('<%=  form_name %>').submit();  return false;">
-                  <%=  @id_and_reps[key][i].report %>
-                  <% form_for :report, :url => { :action => 'show' }, :html => { :id => form_name } do |f| %>
-                    <%= f.hidden_field :id, :value =>  @id_and_reps[key][i].id  %>
-                    <%= f.hidden_field :report_date, :value => @id_and_reps[key][i].report_date   %>
-                    <%= f.hidden_field :user_id, :value => key   %>
-                    <%= f.submit 'Edit', :style => 'visibility: hidden' %>
-                  <% end %>
-            </td>
+    </td>
+    <td>
+      <table id="my_table" class ="list issues" style="border-collapse: separate;" >
+        <thead>
+          <tr>
+            <% percent=(100/(@id_and_reps.keys.length)).to_s + "%" %>
+            <th></th>
+            <% @id_and_reps.keys.each do |key| %>
+              <th style="width:<%=  percent%>"><%= User.find(key).name %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% (0...@id_and_reps.to_a[0][1].length).each do |i| %>
+            <% isweekendday = @id_and_reps.to_a[0][1][i].report_date.wday == 0 || @id_and_reps.to_a[0][1][i].report_date.wday == 6%>
+            <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even') %>">
+              <td>
+                <%= @id_and_reps.to_a[0][1][i].report_date.strftime("%d/%m/%Y") %>
+                <%=  dnames[@id_and_reps.to_a[0][1][i].report_date.wday] %>
+              </td>
+              <% @id_and_reps.keys.each do |key| %>
+                <% if isweekendday == true %>
+                  <% bcolor="#B0D2D7" %>
+                <% elsif  @id_and_reps[key][i].report.nil? %>
+                  <% bcolor="lightpink" %>
+                <% elsif @id_and_reps[key][i].trash == true %>
+                  <% bcolor="lightyellow" %>
+                <% else %>
+                  <% bcolor="#C1FFC1" %>
+                <% end %>
+                <% if @id_and_reps[key][i].report.nil? && key != User.current.id %>
+                  <td style="background-color: <%=bcolor%>;cursor: default">
+                  </td>
+                <% else %>
+                  <% form_name = (key.to_s + "_" + i.to_s) %>
+                  <td style="background-color: <%=bcolor%>;cursor: pointer;" onMouseOver="this.style.backgroundColor='#87CEFA'; this.style.cursor='hand';"
+                      onMouseOut="this.style.backgroundColor='<%=bcolor%>'" onClick="document.getElementById('<%=  form_name %>').submit();  return false;">
+                        <%=  @id_and_reps[key][i].report %>
+                        <% form_for :report, :url => { :action => 'show' }, :html => { :id => form_name } do |f| %>
+                          <%= f.hidden_field :id, :value =>  @id_and_reps[key][i].id  %>
+                          <%= f.hidden_field :report_date, :value => @id_and_reps[key][i].report_date   %>
+                          <%= f.hidden_field :user_id, :value => key   %>
+                          <%= hidden_field_tag(:filter_startdate, (@startdate) , {:name => "filter[startdate]"}) %>
+                          <%= hidden_field_tag(:filter_enddate,  (@enddate), {:name => "filter[enddate]"}) %>
+                          <%= hidden_field_tag(:filter_watched_id,  (@selected), {:name => "filter[watched_id]"}) %>
+                          <%= f.submit 'Edit', :style => 'visibility: hidden' %>
+                        <% end %>
+                  </td>
 
+                <% end %>
+              <% end %>
+            </tr>
           <% end %>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
+        </tbody>
+      </table>
+    </td>
+  </tr>
 </table>

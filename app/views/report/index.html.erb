@@ -7,7 +7,7 @@
         <%= f.text_field "startdate", :size => 10, :value => @startdate, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
       </td>
       <td>
-        <%= f.submit "Выбрать" %>
+        <%= f.submit l(:choose_button) %>
       </td>
     <% end %>
   </tr>

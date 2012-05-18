@@ -96,10 +96,15 @@ class ReportController < ApplicationController
       flash[:error] = l(:nothing_to_update)
     end
     if (/report\/show/.match(request.env["HTTP_REFERER"]))
-      if (@report.nil? || @report.id.nil?)
-        redirect_to :action => 'show', :report => { :id => "", :report_date => reports.first[1][:report_date], :user_id => reports.first[1][:user_id] }
+      if !params.key?(:filter) || errors != ""
+        if (@report.nil? || @report.id.nil?)
+          redirect_to :action => 'show', :report => { :id => "", :report_date => reports.first[1][:report_date], :user_id => reports.first[1][:user_id] }
+        else
+          redirect_to :action => 'show', :report => @report.id
+        end
       else
-        redirect_to :action => 'show', :report => @report.id
+        redirect_to :action => 'view', :filter => { :startdate => params[:filter][:startdate], :enddate => params[:filter][:enddate], :watched_id =>  
+            params[:filter][:watched_id].split(/[,\[]/).select{|i| i != ""}.collect{|i| i.to_i}}
       end
     else
       redirect_to :action => 'index'
@@ -127,8 +132,8 @@ class ReportController < ApplicationController
       endtime = Time.now
     end
     if (@watchedids.include?(User.current.id))
-        @watchedids.sort!{|a,b| User.find(a).lastname <=> User.find(b).lastname }
-        @watchedids = (@watchedids - [User.current.id]).insert(0,User.current.id)
+      @watchedids.sort!{|a,b| User.find(a).lastname <=> User.find(b).lastname }
+      @watchedids = (@watchedids - [User.current.id]).insert(0,User.current.id)
     end
     duration = ((endtime-starttime)/1.days).to_i
     if duration > 30
