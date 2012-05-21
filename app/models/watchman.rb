@@ -5,22 +5,18 @@ class Watchman < ActiveRecord::Base
   validates_presence_of :watchman_id, :watched_id, :on => :save
   validates_uniqueness_of :watched_id, :scope => :watchman_id
 
+  #все кого может смотреть текущий пользователь
   def self.getwatchedids
     ids = []
-#    if User.current.admin?
-#      watcheds = User.find(:all, :conditions => "status = 1", :order => :lastname )
-#      watcheds.each do |w|
-#        ids << w.id
-#      end
-#    else
       watcheds = Watchman.find_by_sql("SELECT distinct watched_id FROM watchmen where watchman_id = " + User.current.id.to_s + " and watched_id <>  " + User.current.id.to_s + " order by watched_id")
       watcheds.each do |w|
         ids << w.watched_id
       end
       ids.insert(0,User.current.id)
-#    end
     return ids
   end
+
+  #все кто смотрят текущего пользователя
   def self.getwatchmanids
     watchmans = Watchman.find_by_sql("SELECT distinct watchman_id FROM watchmen where watched_id = " + User.current.id.to_s + " and watchman_id <>  " + User.current.id.to_s)
     ids = []
