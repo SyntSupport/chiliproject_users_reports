@@ -81,6 +81,7 @@ class ReportController < ApplicationController
             next
           end
           status = l(:redid_report) #для темы письма-уведомления
+          @report.trash = false
         end
         @report.attributes= report
       end
