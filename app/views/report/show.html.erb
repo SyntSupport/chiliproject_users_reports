@@ -1,5 +1,6 @@
 <h2><%= User.find(@report.user_id).name %>:</h2>
 <% isweekendday = @report.report_date.wday == 0 || @report.report_date.wday == 6%>
+<% iscurrentday = @report.report_date == Time.now.beginning_of_day%>
 <table class ="list issues" >
   <thead>
     <tr>
@@ -19,12 +20,11 @@
       <% end %>
       <% reports_from.fields_for :report, :index => @report do |rep_from|%>
         <tr id="issue" class="hascontextmenu <%= cycle('odd', 'even')%>" style="background-color: <%= (@report.trash == true ? "lightyellow" : ( isweekendday ?  "#B0D2D7" : "" )) %>">
-          <%= render :partial => 'report', :object => @report, :locals => {:f => rep_from} %>
+          <%= render :partial => 'report', :object => @report, :locals => {:f => rep_from, :iscurrentday => iscurrentday} %>
         </tr>
       <% end %>
-      <%= reports_from.submit l(:add_button) if (User.current.id == @report.user_id && @report.trash == true) || User.current.id != @report.user_id || @report.id.nil? %>
+      <%= reports_from.submit l(:add_button) if ((User.current.id == @report.user_id && (iscurrentday  || @report.trash == true || @report.id.nil?)) || User.current.id != @report.user_id )   %>
     <% end %>
   </tbody>
 </table>
-
 

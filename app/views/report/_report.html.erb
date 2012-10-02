@@ -1,5 +1,4 @@
 <% dnames  = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'] %>
-<% iseditable = report[:report].nil? || report.trash == true %>
 <%= f.hidden_field :id, :value => report.id %>
 <%= f.hidden_field :report_date, :value => report.report_date %>
 <%= f.hidden_field :user_id, :value => report.user.id %>
@@ -8,7 +7,7 @@
   <%=  dnames[report.report_date.wday] %>
 </td>
 <td>
-  <% if iseditable && report.user_id == User.current.id %>
+  <% if report.user_id == User.current.id && ((iscurrentday rescue true) || report.id.nil? || report.trash == true) %>
     <%= f.text_area :report, :rows => 5, :value => report.report, :style => "height:100%;width:100%", :class => 'wiki-edit'  %>
   <% else %>
     <%=  report.report %>
