@@ -9,7 +9,7 @@ class Report < ActiveRecord::Base
     #logger.debug "IN send_notifications"
     recipients = []
     if self.user_id == User.current.id
-      recipients = Watchman.getwatchmanids - [User.current.id]
+      #recipients = Watchman.getwatchmanids - [User.current.id]
     else
       recipients << self.user_id
     end
@@ -19,3 +19,4 @@ class Report < ActiveRecord::Base
     end
   end
 end
+
