@@ -16,7 +16,7 @@
         <br/>
         <%= label_tag "watched_id", "Наблюдаемые:"   %>
         <br/>
-        <%= f.select "watched_id", options_for_select(@all.collect {|p| [ User.find(p).name, p ] }, @selected), { :include_blank => false},{  :multiple => true, :size => @all.length  }  %>
+        <%= f.select "watched_id", options_for_select(@all.collect {|p| [ User.find(p).name(:lastname_firstname), p ] }, @selected), { :include_blank => false},{  :multiple => true, :size => @all.length  }  %>
       <% end %>
     </td>
     <td>
@@ -76,3 +76,4 @@
     </td>
   </tr>
 </table>
+

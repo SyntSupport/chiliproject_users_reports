@@ -4,9 +4,9 @@
 
 <% form_for :watchman, :url => {:action => "create"} do |f| %>
   <%= label_tag ":watchman_id", "Смотрящий" %>
-  <%= f.select(:watchman_id , @users.collect {|p| [ p.name, p.id ] }, { :include_blank => true }) %>
+  <%= f.select(:watchman_id , @users.collect {|p| [ p.name(:lastname_firstname), p.id ] }, { :include_blank => true }) %>
   <%= label_tag ":watched_id", "Наблюдаемый" %>
-  <%= f.select(:watched_id, @users.collect {|p| [ p.name, p.id ] }, { :include_blank => true }) %>
+  <%= f.select(:watched_id, @users.collect {|p| [ p.name(:lastname_firstname), p.id ] }, { :include_blank => true }) %>
   <%= f.submit "Добавить" %>
 <% end %>
 
@@ -35,3 +35,4 @@
 <% content_for :header_tags do %>
   <%= javascript_include_tag 'select_setting.js', :plugin => 'chiliproject_users_reports' %>
 <% end %>
+
