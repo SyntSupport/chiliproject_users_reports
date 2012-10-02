@@ -5,6 +5,8 @@
       <td>
         <%= label_tag "startdate", "Начальная дата:"   %>
         <%= f.text_field "startdate", :size => 10, :value => @startdate, :class => "values_startdate", :id => "values_startdate" %> <%= calendar_for "values_startdate" %>
+        <%= label_tag "enddate", "Конечная дата:"   %>
+        <%= f.text_field "enddate", :size => 10, :value => @enddate, :class => "values_enddate", :id => "values_enddate" %> <%= calendar_for "values_enddate" %>
       </td>
       <td>
         <%= f.submit l(:choose_button) %>
@@ -38,5 +40,4 @@
     <% end %>
   </tbody>
 </table>
-
 

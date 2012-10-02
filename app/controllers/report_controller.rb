@@ -5,12 +5,12 @@ class ReportController < ApplicationController
   def index
     #собрать массив за последние 7 дней, где одна запись (дата с днем недели, отчет, признак барахла)
     duration = 6
-    endtime = Time.now
-    @startdate = ""
     if (params.key?(:filter))
+      endtime = Time.parse(params[:filter][:enddate]) rescue Time.now
       starttime = Time.parse(params[:filter][:startdate]) rescue (endtime - duration.days).beginning_of_day
     else
-      starttime = (endtime - duration.days).beginning_of_day
+      starttime = (Time.now - duration.days).beginning_of_day
+      endtime = Time.now
     end
     duration = ((endtime-starttime)/1.days).to_i
     if duration > 30
@@ -21,11 +21,12 @@ class ReportController < ApplicationController
       starttime = (endtime - duration.days).beginning_of_day
     end
     @startdate = starttime.strftime("%Y-%m-%d")
+    @enddate = endtime.strftime("%Y-%m-%d")
     row_reports = Report.find(:all, :conditions => { :user_id => User.current.id, :report_date => starttime..endtime }, :order => "report_date DESC")
     #для каждого дня: если нет отчета - сделать заготовку
     @reports = []
     (0..duration).each do |i|
-      onedayreps = row_reports.select {|report| report.report_date >= (endtime - i.days).beginning_of_day and report.report_date <= (Time.now - i.days).end_of_day}
+      onedayreps = row_reports.select {|report| report.report_date >= (endtime - i.days).beginning_of_day and report.report_date <= (endtime - i.days).end_of_day}
       if onedayreps.blank?
         onedayreps = [Report.new({:report_date => (endtime - i.days).beginning_of_day, :user_id => User.current.id})]
       end
