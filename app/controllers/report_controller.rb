@@ -89,7 +89,7 @@ class ReportController < ApplicationController
       if @report.save
         @report.send_notifications(status) #рассылка уведомлений
       else
-        errors << report[:report_date] + ": " + @report.errors.full_messages + glue
+        errors << report[:report_date] + ": " + @report.errors.full_messages.inspect + glue
       end
     end
     if isupdate == true
@@ -109,7 +109,7 @@ class ReportController < ApplicationController
           redirect_to :action => 'show', :report => @report.id
         end
       else
-        redirect_to :action => 'view', :filter => { :startdate => params[:filter][:startdate], :enddate => params[:filter][:enddate], :watched_id =>  
+        redirect_to :action => 'view', :filter => { :startdate => params[:filter][:startdate], :enddate => params[:filter][:enddate], :watched_id =>
             params[:filter][:watched_id].split(/[,\[]/).select{|i| i != ""}.collect{|i| i.to_i}}
       end
     else

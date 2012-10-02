@@ -4,6 +4,7 @@ ru:
   menu_view_reports: "Просмотреть отчеты "
   field_watched: "Наблюдаемый"
   field_watchman: "Смотрящий"
+  field_report: "Отчет"
   nothing_to_update: "Не внесено изменений"
   new_report: "Отчет (Новый)"
   redo_report: "Отчет (Переделать)"
@@ -12,5 +13,4 @@ ru:
   redid_report: "Отчет (Исправленный)"
   add_button: "Сохранить"
   choose_button: "Сформировать"
-
 
