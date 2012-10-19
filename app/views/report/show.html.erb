@@ -1,6 +1,6 @@
 <h2><%= User.find(@report.user_id).name %>:</h2>
 <% isweekendday = @report.report_date.wday == 0 || @report.report_date.wday == 6%>
-<% iscurrentday = @report.report_date == Time.now.beginning_of_day%>
+<% iscurrentday = @report.report_date >= Time.now.beginning_of_day%>
 <table class ="list issues" >
   <thead>
     <tr>
